@@ -1,0 +1,57 @@
+/**Algorithm
+   *define a variable
+   use a variable
+   */
+  const heading = "Profile";
+  const verified = true;
+  const dept = "Coding";
+  const age = 12;
+  /**Algorithm
+   * return name
+   */
+  //type 1
+  function printName () {
+    console.log("HI SIR");
+  }
+  printName()
+    //type 2
+  function getName() {
+  const name = "Moin";
+    return name;
+  }
+      //type 3
+  // function printedpassedName(name) {
+  //   console.log(name)
+  // }
+
+  // printedpassedName("Moin")
+        //type 4 
+        function add(a,b) {
+          const result = a + b;
+          return result;
+        }
+
+        function sub(a,b) {
+          const result = a - b;
+          return result;
+        }
+        function mul(a,b) {
+          const result = a*b;
+          return result;
+        }
+        function div(a,b) {
+          const result = a/b;
+          return result;
+        }
+
+         <div className="App">
+      <h1>{heading}</h1>
+      <p>Name: {getName()}</p>
+      <p>Age: {age}</p>    
+      <p>Dept: {dept}</p>
+      <p>Verified: {(verified === true) ? "yes":"no"}</p>  
+      <p>Result-add: {add(1,99)}</p>
+      <p>Result-sub: {sub(101,1)}</p>
+      <p>Result-mul: {mul(50,2)}</p>
+      <p>Result-div: {div(200,2)}</p>
+    </div>
