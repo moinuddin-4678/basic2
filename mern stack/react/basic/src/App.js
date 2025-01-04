@@ -1,7 +1,7 @@
 import './App.css';
 // import Profile from './componrts/Profile';
 import ProfileTable from './componrts/ProfileTable';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 function App() {
@@ -11,6 +11,22 @@ function App() {
   const [link, setLink] = useState("")
 
   const [profiles, setProfiles] = useState([]);
+  const [singelprofile, setsingelProfile] = useState({ });
+
+  useEffect(() => {
+    // get all profiles
+    fetch('http://localhost:8000/profiles')
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setProfiles(res)
+      })
+      .catch((error) => { console.log(error) })
+
+    
+  }, []);
+
 
   // const profiles = [
   //   {
@@ -80,9 +96,58 @@ function App() {
   return (
     <div className="container mt-4">
       <h1>Profiles</h1>
+
+      <div className='row mb-4'>
+        <div className='col-md-4'>
+          <div className="card">
+            <div className="card-header">
+              <h3>Update Profile</h3>
+            </div>
+            <div className="card-body">
+              <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control type="text" placeholder="Enter Name" onChange={(e) => { console.log(e); setName(e.target.value) }} 
+                  value={singelprofile.name} 
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setDesc(e.target.value) }} 
+                  value={singelprofile.desc}
+                    />
+
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Link</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Github Profile Link"
+                    onChange={(e) => { setLink(e.target.value) }}
+                    value={singelprofile.insta}
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit" onClick={(e) => {
+                  e.preventDefault()
+                  setProfiles((old) => [{
+                    name: name,
+                    desc: desc,
+                    link: link,
+                  },
+                  ...old
+                  ])
+
+                }}>
+                  Add Profile
+                </Button>
+              </Form>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="row">
         <div className="col-md-8">
-          <ProfileTable profiles={profiles} />
+          <ProfileTable profiles={profiles} set={setsingelProfile}/>
         </div>
         <div className="col-md-4">
           <div className="card">
@@ -117,7 +182,7 @@ function App() {
                   },
                   ...old
                   ])
-                  
+
                 }}>
                   Add Profile
                 </Button>
@@ -125,7 +190,12 @@ function App() {
             </div>
           </div>
         </div>
+
       </div>
+
+
+
+
       {/* <div className='row'>
       {
         profiles.map((profile)=>{
