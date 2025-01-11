@@ -4,6 +4,7 @@ import ProfileTable from './componrts/ProfileTable';
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+
 function App() {
 
   const [name, setName] = useState("")
@@ -11,7 +12,12 @@ function App() {
   const [link, setLink] = useState("")
 
   const [profiles, setProfiles] = useState([]);
-  const [singelprofile, setsingelProfile] = useState({ });
+  const [singelprofile, setsingelProfile] = useState({
+    id:'',
+    name:'',
+    desc:'',
+    link:''
+  });
 
   useEffect(() => {
     // get all profiles
@@ -23,11 +29,55 @@ function App() {
         setProfiles(res)
       })
       .catch((error) => { console.log(error) })
-
-    
   }, []);
 
+  function createProfile(e) {
+    e.preventDefault()
+    const id = profiles.length+1;
+    fetch('http://localhost:8000/profileCreate/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'Application/json' },
+      body: JSON.stringify({
+        id: id,
+        name: name,
+        desc: desc,
+        insta: link
+      })
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setProfiles(res)
+        setName("");
+        setDesc("");
+        setLink("");
+      })
+      .catch((error) => { console.log(error) })
+  }
 
+  function updateProfile(e) {
+    e.preventDefault()
+    fetch('http://localhost:8000/profileUpdate/', {
+      method: 'put',
+      body: JSON.stringify({
+        id: singelprofile.id,
+        name: singelprofile.name,
+        desc: singelprofile.desc,
+        link: singelprofile.link
+      })
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setProfiles(res)
+        setName("");
+        setDesc("");
+        setLink("");
+      })
+      .catch((error) => { console.log(error) })
+  }
   // const profiles = [
   //   {
   //     name: "Vocab",
@@ -96,7 +146,6 @@ function App() {
   return (
     <div className="container mt-4">
       <h1>Profiles</h1>
-
       <div className='row mb-4'>
         <div className='col-md-4'>
           <div className="card">
@@ -107,16 +156,13 @@ function App() {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Name" onChange={(e) => { console.log(e); setName(e.target.value) }} 
-                  value={singelprofile.name} 
-                    />
+                  <Form.Control type="text" placeholder="Enter Name"   onChange={(e) => {setsingelProfile({...setsingelProfile,name:e.target.value})}} 
+                  // onChange={(e) => { console.log(e); setName(e.target.value) }}
+                  value={singelprofile.name}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Description</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setDesc(e.target.value) }} 
-                  value={singelprofile.desc}
-                    />
-
+                  <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setDesc(e.target.value) }}value={singelprofile.desc}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Link</Form.Label>
@@ -127,19 +173,11 @@ function App() {
                     value={singelprofile.insta}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={(e) => {
-                  e.preventDefault()
-                  setProfiles((old) => [{
-                    name: name,
-                    desc: desc,
-                    link: link,
-                  },
-                  ...old
-                  ])
-
-                }}>
-                  Add Profile
-                </Button>
+                <Button variant="primary" type="submit"
+                onClick={(e) => {
+                  updateProfile(e)
+                }}
+                >Update Profile</Button>
               </Form>
             </div>
           </div>
@@ -147,7 +185,7 @@ function App() {
       </div>
       <div className="row">
         <div className="col-md-8">
-          <ProfileTable profiles={profiles} set={setsingelProfile}/>
+          <ProfileTable profiles={profiles} set={setsingelProfile} />
         </div>
         <div className="col-md-4">
           <div className="card">
@@ -158,7 +196,10 @@ function App() {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Name" onChange={(e) => { console.log(e); setName(e.target.value) }} />
+                  <Form.Control type="text" placeholder="Enter Name"
+                   onChange={(e) => {
+                     console.log(e); setName(e.target.value)}} 
+                    />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Description</Form.Label>
@@ -173,18 +214,8 @@ function App() {
                     onChange={(e) => { setLink(e.target.value) }}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={(e) => {
-                  e.preventDefault()
-                  setProfiles((old) => [{
-                    name: name,
-                    desc: desc,
-                    link: link,
-                  },
-                  ...old
-                  ])
-
-                }}>
-                  Add Profile
+                <Button variant="primary" type="submit" onClick={(e) => {createProfile(e)}}>
+                  Create Profile
                 </Button>
               </Form>
             </div>
@@ -192,10 +223,6 @@ function App() {
         </div>
 
       </div>
-
-
-
-
       {/* <div className='row'>
       {
         profiles.map((profile)=>{

@@ -1,6 +1,6 @@
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-function ProfileTable({ profiles, set }) {
+function ProfileTable({ profiles, set , updateProfile }) {
 
   function getSingleData(id) {
     fetch('http://localhost:8000/profile/' + id)
@@ -12,6 +12,7 @@ function ProfileTable({ profiles, set }) {
       })
       .catch((error) => { console.log(error) })
   }
+  
   return (
     <Table striped bordered hover>
       <thead>
@@ -32,7 +33,7 @@ function ProfileTable({ profiles, set }) {
               <td>{profile.desc}</td>
               <td>
                 <a href={profile.link} target="_" variant="primary">
-                  <Button >Github Profile</Button>
+                  <Button>Github Profile</Button>
                 </a>
               </td>
               <td>
