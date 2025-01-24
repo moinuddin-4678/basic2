@@ -1,6 +1,6 @@
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-function ProfileTable({ profiles, set , updateProfile }) {
+function ProfileTable({ profiles, set , setProfiles  }) {
 
   function getSingleData(id) {
     fetch('http://localhost:8000/profile/' + id)
@@ -12,7 +12,19 @@ function ProfileTable({ profiles, set , updateProfile }) {
       })
       .catch((error) => { console.log(error) })
   }
-  
+  function profiledelete(id) {
+    fetch('http://localhost:8000/profiledelete/'+ id , {
+      method: 'delete',
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        setProfiles(res)
+
+      })
+      .catch((error) => { console.log(error) })
+  }
   return (
     <Table striped bordered hover>
       <thead>
@@ -36,12 +48,9 @@ function ProfileTable({ profiles, set , updateProfile }) {
                   <Button>Github Profile</Button>
                 </a>
               </td>
-              <td>
-                <Button
-                  onClick={() => {
-                    getSingleData(profile.id)
-                  }}
-                >Edit</Button>
+              <td >
+                <Button className="m-2" onClick={() => {getSingleData(profile.id)}}>Edit</Button>
+                <Button onClick={() => {profiledelete(profile.id)}}>delete</Button>
               </td>
             </tr>
           );

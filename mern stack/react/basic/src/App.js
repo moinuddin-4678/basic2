@@ -12,12 +12,7 @@ function App() {
   const [link, setLink] = useState("")
 
   const [profiles, setProfiles] = useState([]);
-  const [singelprofile, setsingelProfile] = useState({
-    id:'',
-    name:'',
-    desc:'',
-    link:''
-  });
+  const [singelProfile, setsingelProfile] = useState({id: '',name: '',desc: '',link: ''});
 
   useEffect(() => {
     // get all profiles
@@ -33,7 +28,7 @@ function App() {
 
   function createProfile(e) {
     e.preventDefault()
-    const id = profiles.length+1;
+    const id = profiles.length + 1;
     fetch('http://localhost:8000/profileCreate/', {
       method: 'POST',
       headers: { 'Content-Type': 'Application/json' },
@@ -41,7 +36,7 @@ function App() {
         id: id,
         name: name,
         desc: desc,
-        insta: link
+        link: link
       })
     })
       .then((res) => {
@@ -56,25 +51,28 @@ function App() {
       .catch((error) => { console.log(error) })
   }
 
+
   function updateProfile(e) {
     e.preventDefault()
-    fetch('http://localhost:8000/profileUpdate/', {
+    fetch('http://localhost:8000/profileUpdate', {
       method: 'put',
-      body: JSON.stringify({
-        id: singelprofile.id,
-        name: singelprofile.name,
-        desc: singelprofile.desc,
-        link: singelprofile.link
-      })
+      headers: { 'Content-Type': 'Application/json' },
+      body: JSON.stringify(singelProfile)
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
         setProfiles(res)
-        setName("");
-        setDesc("");
-        setLink("");
+        setsingelProfile(
+          {
+            id: '',
+            name: '',
+            desc: '',
+            link: ''
+          }
+        )
+
       })
       .catch((error) => { console.log(error) })
   }
@@ -156,28 +154,24 @@ function App() {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Name"   onChange={(e) => {setsingelProfile({...setsingelProfile,name:e.target.value})}} 
-                  // onChange={(e) => { console.log(e); setName(e.target.value) }}
-                  value={singelprofile.name}/>
+                  <Form.Control type="text" placeholder="Enter Name" onChange={(e) => { setsingelProfile({ ...singelProfile, name: e.target.value }) }}
+                    // onChange={(e) => { console.log(e); setName(e.target.value) }}
+                    value={singelProfile.name} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Description</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setDesc(e.target.value) }}value={singelprofile.desc}/>
+                  <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setsingelProfile({ ...singelProfile, desc: e.target.value }) }} value={singelProfile.desc}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Link</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter Github Profile Link"
-                    onChange={(e) => { setLink(e.target.value) }}
-                    value={singelprofile.insta}
+                    onChange={(e) => { setsingelProfile({ ...singelProfile, link: e.target.value }) }}
+                    value={singelProfile.insta}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit"
-                onClick={(e) => {
-                  updateProfile(e)
-                }}
-                >Update Profile</Button>
+                <Button variant="primary" type="submit"onClick={(e) => {updateProfile(e)}}>Update Profile</Button>
               </Form>
             </div>
           </div>
@@ -185,7 +179,7 @@ function App() {
       </div>
       <div className="row">
         <div className="col-md-8">
-          <ProfileTable profiles={profiles} set={setsingelProfile} />
+          <ProfileTable profiles={profiles} set={setsingelProfile} setProfiles={setProfiles}/>
         </div>
         <div className="col-md-4">
           <div className="card">
@@ -196,25 +190,17 @@ function App() {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Name"
-                   onChange={(e) => {
-                     console.log(e); setName(e.target.value)}} 
-                    />
+                  <Form.Control type="text" placeholder="Enter Name" onChange={(e) => {console.log(e); setName(e.target.value)}}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Description</Form.Label>
                   <Form.Control type="text" placeholder="Enter Description" onChange={(e) => { setDesc(e.target.value) }} />
-
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Link</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter Github Profile Link"
-                    onChange={(e) => { setLink(e.target.value) }}
-                  />
+                  <Form.Control type="text"placeholder="Enter Github Profile Link"onChange={(e) => { setLink(e.target.value) }}/>
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={(e) => {createProfile(e)}}>
+                <Button variant="primary" type="submit" onClick={(e) => { createProfile(e) }}>
                   Create Profile
                 </Button>
               </Form>
