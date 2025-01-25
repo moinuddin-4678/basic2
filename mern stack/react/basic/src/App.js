@@ -168,7 +168,7 @@ function App() {
                     type="text"
                     placeholder="Enter Github Profile Link"
                     onChange={(e) => { setsingelProfile({ ...singelProfile, link: e.target.value }) }}
-                    value={singelProfile.insta}
+                    value={singelProfile.link}
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit"onClick={(e) => {updateProfile(e)}}>Update Profile</Button>
